@@ -1,0 +1,187 @@
+{
+  "name": "nexus",
+  "version": "1",
+  "source": "https://github.com/msitarzewski/agency-agents",
+  "note": "Phase names, gate keepers and gate criteria mirror the NEXUS playbooks (MIT, AgentLand Contributors). Phase 6 has no gate: its criteria are the success metrics; passing the review marks steady state.",
+  "phases": [
+    {
+      "id": 0,
+      "name": "Discovery",
+      "objective": "Validate the market, the user pain, the compliance path and the technical feasibility before committing resources.",
+      "gateKeeper": "Executive Summary Generator",
+      "agents": [
+        "Trend Researcher",
+        "Feedback Synthesizer",
+        "UX Researcher",
+        "Analytics Reporter",
+        "Legal Compliance Checker",
+        "Tool Evaluator",
+        "Executive Summary Generator"
+      ],
+      "source": "https://github.com/msitarzewski/agency-agents/blob/main/strategy/playbooks/phase-0-discovery.md",
+      "criteria": [
+        { "n": 1, "text": "Market opportunity validated with TAM > minimum viable threshold", "evidence": "Trend Researcher report" },
+        { "n": 2, "text": "≥3 validated user pain points with supporting data", "evidence": "Feedback Synthesizer + UX Researcher" },
+        { "n": 3, "text": "No blocking compliance issues identified", "evidence": "Legal Compliance Checker matrix" },
+        { "n": 4, "text": "Key metrics and data sources identified", "evidence": "Analytics Reporter audit" },
+        { "n": 5, "text": "Technology stack feasible and assessed", "evidence": "Tool Evaluator assessment" },
+        { "n": 6, "text": "Executive summary delivered with GO/NO-GO recommendation", "evidence": "Executive Summary Generator" }
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Strategy & Architecture",
+      "objective": "Define what we're building, how it's structured, and what success looks like — before writing a single line of code.",
+      "gateKeeper": "Studio Producer + Reality Checker",
+      "agents": [
+        "Studio Producer",
+        "Senior Project Manager",
+        "UX Architect",
+        "Brand Guardian",
+        "Backend Architect",
+        "Finance Tracker",
+        "Sprint Prioritizer",
+        "Reality Checker"
+      ],
+      "source": "https://github.com/msitarzewski/agency-agents/blob/main/strategy/playbooks/phase-1-strategy.md",
+      "criteria": [
+        { "n": 1, "text": "Architecture covers 100% of spec requirements", "evidence": "Senior PM task list cross-referenced with architecture" },
+        { "n": 2, "text": "Brand system complete (logo, colors, typography, voice)", "evidence": "Brand Guardian deliverable" },
+        { "n": 3, "text": "All technical components have implementation path", "evidence": "Backend Architect + UX Architect specs" },
+        { "n": 4, "text": "Budget approved and within constraints", "evidence": "Finance Tracker plan" },
+        { "n": 5, "text": "Sprint plan is velocity-based and realistic", "evidence": "Sprint Prioritizer backlog" },
+        { "n": 6, "text": "Security architecture defined", "evidence": "Backend Architect security spec" },
+        { "n": 7, "text": "Compliance requirements integrated into architecture", "evidence": "Legal requirements mapped to technical decisions" }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Foundation & Scaffolding",
+      "objective": "Build the technical and operational foundation that all subsequent work depends on. Get the skeleton standing before adding muscle.",
+      "gateKeeper": "DevOps Automator + Evidence Collector",
+      "agents": [
+        "DevOps Automator",
+        "Backend Architect",
+        "Frontend Developer",
+        "Evidence Collector",
+        "Studio Operations"
+      ],
+      "source": "https://github.com/msitarzewski/agency-agents/blob/main/strategy/playbooks/phase-2-foundation.md",
+      "criteria": [
+        { "n": 1, "text": "CI/CD pipeline builds, tests, and deploys", "evidence": "Pipeline execution logs" },
+        { "n": 2, "text": "Database schema deployed with all tables/indexes", "evidence": "Migration success output" },
+        { "n": 3, "text": "API scaffold responding on health check", "evidence": "curl response evidence" },
+        { "n": 4, "text": "Frontend skeleton renders in browser", "evidence": "Evidence Collector screenshots" },
+        { "n": 5, "text": "Monitoring dashboards showing metrics", "evidence": "Dashboard screenshots" },
+        { "n": 6, "text": "Design system tokens implemented", "evidence": "Component library demo" },
+        { "n": 7, "text": "Theme toggle functional (light/dark/system)", "evidence": "Before/after screenshots" },
+        { "n": 8, "text": "Git workflow and processes documented", "evidence": "Studio Operations playbook" }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Build & Iterate",
+      "objective": "Execute the sprint plan through the Dev↔QA loop: every task is verified with evidence before it counts as done.",
+      "gateKeeper": "Agents Orchestrator",
+      "agents": [
+        "Agents Orchestrator",
+        "Senior Project Manager",
+        "Frontend Developer",
+        "Backend Architect",
+        "Evidence Collector",
+        "AI Engineer"
+      ],
+      "source": "https://github.com/msitarzewski/agency-agents/blob/main/strategy/playbooks/phase-3-build.md",
+      "criteria": [
+        { "n": 1, "text": "All sprint tasks pass QA (100% completion)", "evidence": "Evidence Collector screenshots per task" },
+        { "n": 2, "text": "All API endpoints validated", "evidence": "API Tester regression report" },
+        { "n": 3, "text": "Performance baselines met (P95 < 200ms)", "evidence": "Performance Benchmarker report" },
+        { "n": 4, "text": "Brand consistency verified (95%+ adherence)", "evidence": "Brand Guardian audit" },
+        { "n": 5, "text": "No critical bugs (zero P0/P1 open)", "evidence": "Test Results Analyzer summary" },
+        { "n": 6, "text": "All acceptance criteria met", "evidence": "Task-by-task verification" },
+        { "n": 7, "text": "Code review completed for all PRs", "evidence": "Git history evidence" }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Quality & Hardening",
+      "objective": "The final quality gauntlet. Reality Checker defaults to NEEDS WORK: prove production readiness with evidence, not claims.",
+      "gateKeeper": "Reality Checker (sole authority)",
+      "agents": [
+        "Reality Checker",
+        "Performance Benchmarker",
+        "Security Engineer",
+        "Legal Compliance Checker",
+        "Infrastructure Maintainer",
+        "Evidence Collector"
+      ],
+      "source": "https://github.com/msitarzewski/agency-agents/blob/main/strategy/playbooks/phase-4-hardening.md",
+      "criteria": [
+        { "n": 1, "text": "User journeys complete", "evidence": "All critical paths working end-to-end — Reality Checker screenshots" },
+        { "n": 2, "text": "Cross-device consistency", "evidence": "Desktop + Tablet + Mobile all working — responsive screenshots" },
+        { "n": 3, "text": "Performance certified", "evidence": "P95 < 200ms, LCP < 2.5s, uptime > 99.9% — Performance Benchmarker report" },
+        { "n": 4, "text": "Security validated", "evidence": "Zero critical vulnerabilities — security scan + compliance report" },
+        { "n": 5, "text": "Compliance certified", "evidence": "All regulatory requirements met — Legal Compliance Checker report" },
+        { "n": 6, "text": "Specification compliance", "evidence": "100% of spec requirements implemented — point-by-point verification" },
+        { "n": 7, "text": "Infrastructure ready", "evidence": "Production environment validated — Infrastructure Maintainer report" }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Launch & Growth",
+      "objective": "Coordinate go-to-market execution across all channels while engineering keeps the product stable.",
+      "gateKeeper": "Studio Producer + Analytics Reporter",
+      "agents": [
+        "Studio Producer",
+        "DevOps Automator",
+        "Growth Hacker",
+        "Content Creator",
+        "Social Media Strategist",
+        "Analytics Reporter",
+        "Support Responder"
+      ],
+      "source": "https://github.com/msitarzewski/agency-agents/blob/main/strategy/playbooks/phase-5-launch.md",
+      "criteria": [
+        { "n": 1, "text": "Deployment successful (zero-downtime)", "evidence": "DevOps Automator deployment logs" },
+        { "n": 2, "text": "Systems stable (no P0/P1 in 48 hours)", "evidence": "Infrastructure Maintainer monitoring" },
+        { "n": 3, "text": "User acquisition channels active", "evidence": "Analytics Reporter dashboard" },
+        { "n": 4, "text": "Feedback loop operational", "evidence": "Feedback Synthesizer report" },
+        { "n": 5, "text": "Stakeholders informed", "evidence": "Executive Summary Generator output" },
+        { "n": 6, "text": "Support operational", "evidence": "Support Responder metrics" },
+        { "n": 7, "text": "Growth metrics tracking", "evidence": "Growth Hacker channel reports" }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Operate & Evolve",
+      "objective": "Sustained operations with continuous improvement. The product is live — now make it thrive.",
+      "gateKeeper": "Studio Producer",
+      "terminal": true,
+      "agents": [
+        "Studio Producer",
+        "Infrastructure Maintainer",
+        "Analytics Reporter",
+        "Growth Hacker",
+        "Finance Tracker",
+        "Feedback Synthesizer",
+        "Legal Compliance Checker"
+      ],
+      "source": "https://github.com/msitarzewski/agency-agents/blob/main/strategy/playbooks/phase-6-operate.md",
+      "criteria": [
+        { "n": 1, "text": "Reliability: system uptime > 99.9%", "evidence": "Infrastructure Maintainer" },
+        { "n": 2, "text": "Reliability: MTTR < 30 minutes", "evidence": "Infrastructure Maintainer" },
+        { "n": 3, "text": "Growth: MoM user growth > 20%", "evidence": "Growth Hacker" },
+        { "n": 4, "text": "Growth: activation rate > 60%", "evidence": "Analytics Reporter" },
+        { "n": 5, "text": "Retention: Day 7 retention > 40%", "evidence": "Analytics Reporter" },
+        { "n": 6, "text": "Retention: Day 30 retention > 20%", "evidence": "Analytics Reporter" },
+        { "n": 7, "text": "Financial: LTV:CAC ratio > 3:1", "evidence": "Finance Tracker" },
+        { "n": 8, "text": "Financial: portfolio ROI > 25%", "evidence": "Studio Producer" },
+        { "n": 9, "text": "Quality: NPS score > 50", "evidence": "Feedback Synthesizer" },
+        { "n": 10, "text": "Quality: support resolution time < 4 hours", "evidence": "Support Responder" },
+        { "n": 11, "text": "Compliance: regulatory adherence > 98%", "evidence": "Legal Compliance Checker" },
+        { "n": 12, "text": "Efficiency: deployment frequency multiple/day", "evidence": "DevOps Automator" },
+        { "n": 13, "text": "Efficiency: process improvement 20%/quarter", "evidence": "Workflow Optimizer" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+agency-runner includes phase names, gate keeper names and gate criteria derived from
+the NEXUS playbooks in:
+
+  https://github.com/msitarzewski/agency-agents
+
+  MIT License
+  Copyright (c) 2025 AgentLand Contributors
+
+The upstream playbooks are the source of truth for each phase. This project does not
+include the agent prompts or the full playbook text; it links to them.
+
+The agency-runner code itself is licensed under the MIT License; see LICENSE.

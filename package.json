@@ -1,0 +1,33 @@
+{
+  "name": "agency-runner",
+  "version": "0.1.0",
+  "description": "Run the agency-agents NEXUS pipeline as a resumable, gated workflow.",
+  "type": "module",
+  "bin": {
+    "agency": "./bin/agency.mjs",
+    "agency-runner": "./bin/agency.mjs"
+  },
+  "files": [
+    "bin",
+    "src",
+    "data",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "scripts": {
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "ai-agents",
+    "nexus",
+    "pipeline",
+    "runbook",
+    "agency-agents",
+    "cli"
+  ],
+  "license": "MIT"
+}
