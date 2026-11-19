@@ -53,7 +53,7 @@ for real life, and the override is recorded in the state file forever.
 | `agency init [--runbook <name>] [--force]` | Start a run in the current directory. |
 | `agency next [--json] [--prompt-only]` | Phase brief, criteria, evidence status, paste-ready prompt. |
 | `agency status [--json]` | All seven phases, current phase, gate state. |
-| `agency evidence <n> <path-or-note>` | Attach an artifact to criterion `n` of the current phase. |
+| `agency evidence <n> <path-or-note>` | Attach an artifact to criterion `n` of the current phase. A path must exist. |
 | `agency gate --pass\|--fail [--note "..."]` | Decide the gate. Failures count toward the 3-attempt escalation. |
 | `agency log "<message>"` | Append a decision to the run log. |
 

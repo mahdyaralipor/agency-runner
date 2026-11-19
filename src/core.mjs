@@ -105,6 +105,11 @@ function addLog(state, message) {
   if (state.log.length > MAX_LOG) state.log = state.log.slice(-MAX_LOG);
 }
 
+function looksLikePath(text) {
+  if (/^https?:\/\//i.test(text)) return false;
+  return /[\\/]/.test(text) || /\.[a-z0-9]{1,5}$/i.test(text);
+}
+
 export function addEvidence(dir, state, n, note) {
   const { meta, phaseState, criteria, done, total } = phaseView(state);
   const idx = Number(n);
@@ -113,6 +118,10 @@ export function addEvidence(dir, state, n, note) {
   }
   const text = String(note ?? '').trim();
   if (!text) throw new CliError('evidence needs a path or a note');
+  // A path that does not exist is not evidence; the gate's whole job is findability.
+  if (looksLikePath(text) && !fs.existsSync(path.resolve(dir, text))) {
+    throw new CliError(`evidence not found: ${text} — create it first, or record a plain note`);
+  }
   const had = Boolean(phaseState.evidence[idx]);
   phaseState.evidence[idx] = { note: text, at: new Date().toISOString() };
   addLog(state, `phase ${meta.id}: evidence #${idx} → ${text}`);

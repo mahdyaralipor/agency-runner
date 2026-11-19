@@ -72,12 +72,28 @@ test('evidence validates its argument', () => {
   assert.throws(() => addEvidence(dir, state, 0, 'x'), /1\.\.6/);
   assert.throws(() => addEvidence(dir, state, 99, 'x'), /1\.\.6/);
   assert.throws(() => addEvidence(dir, state, 1, '   '), /needs a path or a note/);
+  assert.throws(() => addEvidence(dir, state, 1, 'reports/missing.md'), /evidence not found/);
+  assert.doesNotThrow(() => addEvidence(dir, state, 1, 'https://example.com/x'));
+});
+
+test('evidence accepts an existing file or a plain note', () => {
+  const dir = tmp();
+  const state = init(dir);
+  fs.mkdirSync(path.join(dir, 'reports'));
+  fs.writeFileSync(path.join(dir, 'reports', 'market.md'), '# market\n');
+  assert.equal(addEvidence(dir, state, 1, 'reports/market.md').done, 1);
+  assert.equal(addEvidence(dir, state, 2, 'interviewed 5 users, notes in the call log').done, 2);
+  assert.equal(fs.existsSync(statePath(dir)), true);
 });
 
 test('gate passes, advances, and persists', () => {
   const dir = tmp();
   const state = init(dir);
-  for (let n = 1; n <= 6; n++) addEvidence(dir, state, n, `reports/p0-${n}.md`);
+  fs.mkdirSync(path.join(dir, 'reports'));
+  for (let n = 1; n <= 6; n++) {
+    fs.writeFileSync(path.join(dir, 'reports', `p0-${n}.md`), 'x');
+    addEvidence(dir, state, n, `reports/p0-${n}.md`);
+  }
 
   const result = decideGate(dir, state, { pass: true, note: 'market validated' });
   assert.equal(result.next, 1);
@@ -128,8 +144,9 @@ test('prompt names the phase, roles and gate keeper', () => {
 test('a full run reaches steady state', () => {
   const dir = tmp();
   const state = init(dir);
+  fs.writeFileSync(path.join(dir, 'evidence.md'), 'x');
   for (const phase of DATA.phases) {
-    for (const criterion of phase.criteria) addEvidence(dir, state, criterion.n, `evidence/${phase.id}-${criterion.n}`);
+    for (const criterion of phase.criteria) addEvidence(dir, state, criterion.n, 'evidence.md');
     decideGate(dir, state, { pass: true, note: `phase ${phase.id} done` });
   }
   const saved = readState(dir);
@@ -148,6 +165,8 @@ test('CLI: init → status → evidence → blocked gate → pass', () => {
   assert.equal(status.phases.length, 7);
   assert.equal(status.phases[0].evidenceCount, 0);
 
+  fs.mkdirSync(path.join(dir, 'docs'));
+  fs.writeFileSync(path.join(dir, 'docs', 'market.md'), '# market\n');
   cli(dir, 'evidence', '1', 'docs/market.md');
   const next = JSON.parse(cli(dir, 'next', '--json'));
   assert.equal(next.done, 1);
@@ -170,7 +189,10 @@ test('CLI: init → status → evidence → blocked gate → pass', () => {
     assert.match(err.stderr, /gate blocked: 5 of 6/);
   }
 
-  for (let n = 2; n <= 6; n++) cli(dir, 'evidence', String(n), `docs/p0-${n}.md`);
+  for (let n = 2; n <= 6; n++) {
+    fs.writeFileSync(path.join(dir, 'docs', `p0-${n}.md`), 'x');
+    cli(dir, 'evidence', String(n), `docs/p0-${n}.md`);
+  }
   assert.match(cli(dir, 'gate', '--pass', '--note', 'done'), /gate passed/);
 
   const after = JSON.parse(cli(dir, 'status', '--json'));
