@@ -150,13 +150,22 @@ export function decideGate(dir, state, { pass, note, force = false }) {
       2,
     );
   }
+  const stale = Object.entries(phaseState.evidence)
+    .filter(([, ev]) => looksLikePath(ev.note) && !fs.existsSync(path.resolve(dir, ev.note)))
+    .map(([n, ev]) => `${n}: ${ev.note}`);
+  if (stale.length > 0 && !force) {
+    throw new CliError(
+      `gate blocked: ${stale.length} evidence path(s) no longer exist (${stale.slice(0, 3).join(', ')})`,
+      2,
+    );
+  }
   if (force && !text) throw new CliError('--force needs --note explaining the override');
 
   phaseState.gate = {
     status: 'passed',
     at: new Date().toISOString(),
     note: text || 'all criteria evidenced',
-    forced: force && missing > 0,
+    forced: force && (missing > 0 || stale.length > 0),
   };
   phaseState.status = 'passed';
   addLog(state, `phase ${meta.id}: gate PASSED${phaseState.gate.forced ? ' (forced)' : ''} — ${phaseState.gate.note}`);

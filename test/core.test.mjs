@@ -86,6 +86,24 @@ test('evidence accepts an existing file or a plain note', () => {
   assert.equal(fs.existsSync(statePath(dir)), true);
 });
 
+test('gate re-checks that evidence paths still exist', () => {
+  const dir = tmp();
+  const state = init(dir);
+  fs.mkdirSync(path.join(dir, 'reports'));
+  for (let n = 1; n <= 6; n++) {
+    fs.writeFileSync(path.join(dir, 'reports', `p${n}.md`), 'x');
+    addEvidence(dir, state, n, `reports/p${n}.md`);
+  }
+  fs.rmSync(path.join(dir, 'reports', 'p3.md'));
+  assert.throws(
+    () => decideGate(dir, state, { pass: true }),
+    (err) => err instanceof CliError && err.exitCode === 2 && /no longer exist/.test(err.message),
+  );
+  const forced = decideGate(dir, state, { pass: true, force: true, note: 'artifact deleted on purpose' });
+  assert.equal(forced.passed, true);
+  assert.equal(forced.phaseState.gate.forced, true);
+});
+
 test('gate passes, advances, and persists', () => {
   const dir = tmp();
   const state = init(dir);

@@ -43,8 +43,9 @@ When every criterion is evidenced, open the gate:
 npx agency-runner gate --pass --note "market validated, 3 pain points confirmed"
 ```
 
-The gate refuses while evidence is missing (exit code `2`). `--force --note "<reason>"` exists
-for real life, and the override is recorded in the state file forever.
+The gate refuses while evidence is missing (exit code `2`), and re-checks at gate time that every
+recorded path still exists. `--force --note "<reason>"` exists for real life, and the override is
+recorded in the state file forever.
 
 ## Commands
 
