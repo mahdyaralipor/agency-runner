@@ -29,5 +29,13 @@
     "agency-agents",
     "cli"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mahdyaralipor/agency-runner.git"
+  },
+  "homepage": "https://github.com/mahdyaralipor/agency-runner#readme",
+  "bugs": {
+    "url": "https://github.com/mahdyaralipor/agency-runner/issues"
+  }
 }
