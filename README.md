@@ -110,6 +110,6 @@ Pinned to the playbooks as of 2026-11-19. Upstream changes need a data update, n
 
 ## Status
 
-`0.1.0`. The state machine, gates, evidence and prompt generation are covered by tests.
+`0.2.0`. The state machine, gates, evidence, digest checks and prompt generation are covered by tests.
 The next milestone is a real run by someone who is not the author — that is the only
 validation that matters for a tool like this.
