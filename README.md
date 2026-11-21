@@ -37,6 +37,21 @@ npx agency-runner evidence 2 reports/pain-points.md
 npx agency-runner status
 ```
 
+```console
+$ agency next
+Phase 0 — Discovery
+gate keeper: Executive Summary Generator
+
+criteria: 1/6 evidenced
+  ✓ 1. Market opportunity validated with TAM > minimum viable threshold
+       evidence: reports/market.md  · sha256:ae58dd622bfb
+  ○ 2. ≥3 validated user pain points with supporting data
+       evidence: Feedback Synthesizer + UX Researcher
+
+$ agency gate --pass
+error: gate blocked: 5 of 6 criteria have no evidence (record them, or --force --note "<reason>")
+```
+
 When every criterion is evidenced, open the gate:
 
 ```bash
