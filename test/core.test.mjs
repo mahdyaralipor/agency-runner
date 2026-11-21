@@ -104,6 +104,27 @@ test('gate re-checks that evidence paths still exist', () => {
   assert.equal(forced.phaseState.gate.forced, true);
 });
 
+test('evidence is fingerprinted and the gate notices edits', () => {
+  const dir = tmp();
+  const state = init(dir);
+  fs.mkdirSync(path.join(dir, 'reports'));
+  const file = path.join(dir, 'reports', 'market.md');
+  fs.writeFileSync(file, '# market v1\n');
+  addEvidence(dir, state, 1, 'reports/market.md');
+  const entry = readState(dir).phases[0].evidence[1];
+  assert.match(entry.sha256, /^[0-9a-f]{64}$/);
+  assert.equal(entry.bytes, 12);
+
+  for (let n = 2; n <= 6; n++) addEvidence(dir, state, n, `interviewed user ${n}`);
+  fs.writeFileSync(file, '# market v2\n');
+  assert.throws(
+    () => decideGate(dir, state, { pass: true }),
+    (err) => err instanceof CliError && err.exitCode === 2 && /changed since recording/.test(err.message),
+  );
+  const forced = decideGate(dir, state, { pass: true, force: true, note: 'report edited after review' });
+  assert.equal(forced.phaseState.gate.forced, true);
+});
+
 test('gate passes, advances, and persists', () => {
   const dir = tmp();
   const state = init(dir);

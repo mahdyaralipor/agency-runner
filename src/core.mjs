@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
 const PKG_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -94,7 +95,7 @@ export function phaseView(state) {
   if (!phaseState) throw new CliError(`state has no record for phase ${meta.id}`);
   const criteria = meta.criteria.map((c) => {
     const entry = phaseState.evidence[c.n];
-    return { ...c, done: Boolean(entry), note: entry?.note ?? null };
+    return { ...c, done: Boolean(entry), note: entry?.note ?? null, sha256: entry?.sha256 ?? null };
   });
   const done = criteria.filter((c) => c.done).length;
   return { meta, phaseState, criteria, done, total: criteria.length };
@@ -110,6 +111,11 @@ function looksLikePath(text) {
   return /[\\/]/.test(text) || /\.[a-z0-9]{1,5}$/i.test(text);
 }
 
+function digestFile(dir, rel) {
+  const buf = fs.readFileSync(path.resolve(dir, rel));
+  return { sha256: crypto.createHash('sha256').update(buf).digest('hex'), bytes: buf.length };
+}
+
 export function addEvidence(dir, state, n, note) {
   const { meta, phaseState, criteria, done, total } = phaseView(state);
   const idx = Number(n);
@@ -123,7 +129,8 @@ export function addEvidence(dir, state, n, note) {
     throw new CliError(`evidence not found: ${text} — create it first, or record a plain note`);
   }
   const had = Boolean(phaseState.evidence[idx]);
-  phaseState.evidence[idx] = { note: text, at: new Date().toISOString() };
+  const artifact = looksLikePath(text) ? digestFile(dir, text) : null;
+  phaseState.evidence[idx] = { note: text, at: new Date().toISOString(), ...artifact };
   addLog(state, `phase ${meta.id}: evidence #${idx} → ${text}`);
   writeState(dir, state);
   return { meta, phaseState, criterion: idx, done: done + (had ? 0 : 1), total };
@@ -150,14 +157,21 @@ export function decideGate(dir, state, { pass, note, force = false }) {
       2,
     );
   }
-  const stale = Object.entries(phaseState.evidence)
-    .filter(([, ev]) => looksLikePath(ev.note) && !fs.existsSync(path.resolve(dir, ev.note)))
-    .map(([n, ev]) => `${n}: ${ev.note}`);
-  if (stale.length > 0 && !force) {
-    throw new CliError(
-      `gate blocked: ${stale.length} evidence path(s) no longer exist (${stale.slice(0, 3).join(', ')})`,
-      2,
-    );
+  const stale = [];
+  const changed = [];
+  for (const [n, ev] of Object.entries(phaseState.evidence)) {
+    if (!looksLikePath(ev.note)) continue;
+    if (!fs.existsSync(path.resolve(dir, ev.note))) {
+      stale.push(`${n}: ${ev.note}`);
+    } else if (ev.sha256 && digestFile(dir, ev.note).sha256 !== ev.sha256) {
+      changed.push(`${n}: ${ev.note}`);
+    }
+  }
+  const problems = [];
+  if (stale.length > 0) problems.push(`${stale.length} evidence path(s) no longer exist (${stale.slice(0, 3).join(', ')})`);
+  if (changed.length > 0) problems.push(`${changed.length} evidence file(s) changed since recording (${changed.slice(0, 3).join(', ')})`);
+  if (problems.length > 0 && !force) {
+    throw new CliError(`gate blocked: ${problems.join('; ')}`, 2);
   }
   if (force && !text) throw new CliError('--force needs --note explaining the override');
 
@@ -165,7 +179,7 @@ export function decideGate(dir, state, { pass, note, force = false }) {
     status: 'passed',
     at: new Date().toISOString(),
     note: text || 'all criteria evidenced',
-    forced: force && (missing > 0 || stale.length > 0),
+    forced: force && (missing > 0 || problems.length > 0),
   };
   phaseState.status = 'passed';
   addLog(state, `phase ${meta.id}: gate PASSED${phaseState.gate.forced ? ' (forced)' : ''} — ${phaseState.gate.note}`);

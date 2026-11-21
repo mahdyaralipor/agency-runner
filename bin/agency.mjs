@@ -101,7 +101,8 @@ function printNext(state, json) {
   console.log(`criteria: ${done}/${total} evidenced`);
   for (const c of criteria) {
     console.log(`  ${c.done ? '✓' : '○'} ${c.n}. ${c.text}`);
-    console.log(`       evidence: ${c.done ? c.note : c.evidence}`);
+    const hash = c.sha256 ? `  · sha256:${c.sha256.slice(0, 12)}` : '';
+    console.log(`       evidence: ${c.done ? c.note + hash : c.evidence}`);
   }
   console.log('');
   console.log('── paste into your agent ─────────────────────────────────────');

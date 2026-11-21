@@ -44,8 +44,9 @@ npx agency-runner gate --pass --note "market validated, 3 pain points confirmed"
 ```
 
 The gate refuses while evidence is missing (exit code `2`), and re-checks at gate time that every
-recorded path still exists. `--force --note "<reason>"` exists for real life, and the override is
-recorded in the state file forever.
+recorded path still exists. Recorded files also keep the sha256 they had when they were attached, so
+a report edited after review is a different report and blocks the gate. `--force --note "<reason>"`
+exists for real life, and the override is recorded in the state file forever.
 
 ## Commands
 
@@ -54,7 +55,7 @@ recorded in the state file forever.
 | `agency init [--runbook <name>] [--force]` | Start a run in the current directory. |
 | `agency next [--json] [--prompt-only]` | Phase brief, criteria, evidence status, paste-ready prompt. |
 | `agency status [--json]` | All seven phases, current phase, gate state. |
-| `agency evidence <n> <path-or-note>` | Attach an artifact to criterion `n` of the current phase. A path must exist. |
+| `agency evidence <n> <path-or-note>` | Attach an artifact to criterion `n` of the current phase. A path must exist; its sha256 is stored. |
 | `agency gate --pass\|--fail [--note "..."]` | Decide the gate. Failures count toward the 3-attempt escalation. |
 | `agency log "<message>"` | Append a decision to the run log. |
 

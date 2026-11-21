@@ -1,6 +1,6 @@
 {
   "name": "agency-runner",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Run the agency-agents NEXUS pipeline as a resumable, gated workflow.",
   "type": "module",
   "bin": {
